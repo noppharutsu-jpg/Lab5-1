@@ -7,6 +7,6 @@ $point = $_POST["point"];
 $sql ="UPDATE students SET student_code='$student_code', student_name='$student_name',
 Point=$point WHERE student_code='$student_code_edit'";
 mysqli_query($conn, $sql);
-header("location: student_list.php");
+header("location: show_exam_result.php");
 exit(0);
 ?>
