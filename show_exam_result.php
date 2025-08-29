@@ -19,4 +19,6 @@ echo "<tr><td>" . $row["student_code"] . "</td><td>" . $row["student_name"]
 . "</td><td>" . $row["point"] . "</td></tr>";
 }
 echo "</table>";
+echo "<br><a href=add_exam_result.php>Add Exam Result</a>";
+echo "</center>";
 echo "</center>";
