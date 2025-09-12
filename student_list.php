@@ -11,7 +11,11 @@ if (mysqli_num_rows($result) > 0) {
         echo "<tr>";
         echo "<td>" . $row["student_code"] . "</td><td>" . $row["student_name"] . "</td><td>" .
             $row["gender"] . "</td><td><a href=edit_student.php?student_code=".
-            $row["student_code"].">Edit</a> <a href=delete_student.php?student_code=".$row["student_code"]." onclick=\"return confirm('Are you sure you want to delete this item?');\">Delete</a></td></tr>";
+            $row["student_code"]
+            .">Edit</a> <a href=delete_student.php?student_code="
+            .$row["student_code"]
+            ." onclick=\"return confirm('Are you sure you want to delete this item?');
+            \">Delete</a></td></tr>";
     }
     echo "</table>";
 } else {
