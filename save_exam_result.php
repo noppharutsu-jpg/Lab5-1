@@ -1,13 +1,39 @@
 <?php
+
 require("connect_db.php");
-$exam_result_edit = $_POST["student_code_edit"];
-$student_code = $_POST["student_code"];
-$student_name = $_POST["student_name"];
-$point = $_POST["point"];
-$sql ="UPDATE exam_results SET student_code='$student_code',student_name='$student_name' ,point=$point 
-WHERE student_code='$student_code_edit' 
-AND student_code='$exam_result_edit'";
-mysqli_query($conn, $sql);
-header("location: show_exam_result.php");
-exit(0);
+
+
+$id = isset($_POST['id_edit']) ? (int) $_POST['id_edit'] : 0;
+$point = isset($_POST['point']) ? $_POST['point'] : null;
+$course_code = isset($_POST['course_code']) ? $_POST['course_code'] : '';
+
+
+if ($id <= 0 || $point === null || empty($course_code)) {
+    die("Error: ข้อมูลที่ส่งมาไม่สมบูรณ์");
+}
+
+
+$sql = "UPDATE exam_results SET point = ? WHERE id = ?";
+
+
+$stmt = mysqli_prepare($conn, $sql);
+
+
+mysqli_stmt_bind_param($stmt, "di", $point, $id);
+
+
+if (mysqli_stmt_execute($stmt)) {
+
+    echo "<script>";
+    echo "alert('บันทึกการแก้ไขสำเร็จ!');";
+    echo "window.location.href = 'show_exam_result.php?course_code=" . urlencode($course_code) . "';";
+    echo "</script>";
+} else {
+
+    echo "เกิดข้อผิดพลาดในการบันทึกข้อมูล: " . mysqli_error($conn);
+}
+
+
+mysqli_stmt_close($stmt);
+mysqli_close($conn);
 ?>

@@ -1,20 +1,71 @@
 <?php
+
 require("connect_db.php");
+
+
 $student_code = $_GET["student_code"];
-$sql = "SELECT * FROM students WHERE student_code='$student_code'";
-$result = mysqli_query($conn, $sql);
+
+
+$sql = "SELECT * FROM students WHERE student_code = ?";
+
+
+$stmt = mysqli_prepare($conn, $sql);
+
+mysqli_stmt_bind_param($stmt, "s", $student_code);
+
+
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 $student = mysqli_fetch_assoc($result);
-echo "<center>";
-echo "<form action=save_student.php method=post>";
-echo "<table border=1 width=40%>";
-echo "<input type=hidden name=student_code_edit value=$student_code />";
-echo "<tr><td>Code:</td><td><input type=text name=student_code value=".$student["student_code"]."
-/></td></tr>";
-echo "<tr><td>Name:</td><td><input type=text name=student_name value=".$student["student_name"]."
-/></td></tr>";
-echo "<tr><td>Gender:</td><td><input type=text name=gender value=".$student["gender"]." /></td></tr>";
-echo "<tr><td colspan=2><center><input type=submit value=Submit /></center></td></tr>";
-echo "</table>";
-echo "</form>";
-echo "</center>";
+
+
+mysqli_stmt_close($stmt);
+
+
+if (!$student) {
+    echo "ไม่พบข้อมูลนักเรียนรหัส: " . htmlspecialchars($student_code);
+    exit();
+}
 ?>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Edit Student</title>
+</head>
+
+<body>
+    <center>
+        <h2>Edit Student Information</h2>
+        <form action="save_student.php" method="post">
+            <input type="hidden" name="original_student_code"
+                value="<?php echo htmlspecialchars($student['student_code']); ?>">
+
+            <table border="1" width="40%">
+                <tr>
+                    <td>Student Code:</td>
+                    <td><input type="text" name="student_code"
+                            value="<?php echo htmlspecialchars($student['student_code']); ?>" /></td>
+                </tr>
+                <tr>
+                    <td>Student Name:</td>
+                    <td><input type="text" name="student_name"
+                            value="<?php echo htmlspecialchars($student['student_name']); ?>" /></td>
+                </tr>
+                <tr>
+                    <td>Gender:</td>
+                    <td><input type="text" name="gender" value="<?php echo htmlspecialchars($student['gender']); ?>" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <center><input type="submit" value="Save Changes" /></center>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </center>
+</body>
+
+</html>
